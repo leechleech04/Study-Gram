@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studygram</title>
     <link rel="stylesheet" href="list.css" />
+    <link rel="stylesheet" href="header.css" />
   </head>
   <body>
-    <%= result.title %> <%= result.content %>
+    <%- include('header.ejs') %> <% for (let i = 0; i < result.length; i++) { %>
+    <a href="#">
+      <div class="content-box">
+        <h2 class="content-title"><%= result[i].title %></h2>
+        <p class="content"><%= result[i].content %></p>
+        <p class="content-user"><%= result[i].user %></p>
+      </div>
+    </a>
+    <% } %>
+    <script
+      src="https://kit.fontawesome.com/a99ca2fd10.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

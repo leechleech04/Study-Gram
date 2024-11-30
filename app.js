@@ -7,6 +7,8 @@ const app = express();
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 let db;
 const url =
@@ -34,12 +36,33 @@ app.get('/login', (req, res) => {
 
 app.get('/list', async (req, res) => {
   let result = await db.collection('post').find().toArray();
-  console.log(result);
-  res.render('list', { result: result[0] });
+  res.render('list', { result: result });
 });
 
 app.get('/write', (req, res) => {
   res.render('write');
+});
+
+app.post('/newcontent', async (req, res) => {
+  try {
+    if (요청.body.title === '') {
+      res.send('<h1>제목을 입력해주세요.</h1>');
+      return;
+    } else if (요청.body.content === '') {
+      res.send('<h1>내용을 입력해주세요.</h1>');
+      return;
+    } else {
+      await db.collection('post').insertOne({
+        title: req.body.title,
+        content: req.body.content,
+        user: 'user1',
+      });
+      res.redirect('/list');
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('<h1>에러 발생</h1>');
+  }
 });
 
 app.get('/detail', (req, res) => {

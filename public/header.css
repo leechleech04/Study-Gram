@@ -8,6 +8,8 @@ header {
   display: flex;
   border-bottom: 3px solid #74c0fc;
   padding: 10px 0;
+  position: fixed;
+  width: 100%;
 }
 
 .main-header {
@@ -42,9 +44,13 @@ nav ul {
   align-items: center;
 }
 
-a {
+nav a {
   text-decoration: none;
   color: #74c0fc;
   font-size: 25px;
   font-weight: 700;
+}
+
+.header-space {
+  height: 100px;
 }
