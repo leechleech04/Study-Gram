@@ -11,6 +11,14 @@ a {
   background-color: #a3d4ff;
 }
 
+.content {
+  max-height: 22px;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .content-user {
   font-size: 14px;
   margin-top: 10px;
