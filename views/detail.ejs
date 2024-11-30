@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyGram</title>
+    <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/detail.css" />
+  </head>
+  <body>
+    <%- include('header.ejs') %>
+    <div class="detail-box">
+      <p class="detail-user"><%= post.user %></p>
+      <h1 class="detail-title"><%= post.title %></h1>
+      <p class="detail-content"><%= post.content %></p>
+      <div class="icon-box">
+        <div class="heart">
+          <i class="fa-regular fa-heart"></i>
+          <p class="heart-num"><%= post.heart %></p>
+        </div>
+        <div class="comment">
+          <i class="fa-regular fa-comment"></i>
+          <p class="comment-num">20,000</p>
+        </div>
+      </div>
+    </div>
+    <div class="comment-box"></div>
+    <script
+      src="https://kit.fontawesome.com/a99ca2fd10.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      //   const heart = document.querySelector('.fa-heart');
+      //   heart.addEventListener('click', () => {
+      //     let heartNum = parseInt(document.querySelector('.heart-num').innerText);
+      //     if (heart.classList.contains('fa-regular')) {
+      //       heart.classList.add('fa-solid');
+      //       heart.classList.remove('fa-regular');
+      //       fetch('/heart/add', {
+      //         method: 'PUT',
+      //         headers: {
+      //           'Content-Type': 'application/json',
+      //         },
+      //         body: JSON.stringify({ heartNum: heartNum, id: '<%= post._id %>' }),
+      //       })
+      //         .then((res) => res.json())
+      //         .then((data) => {
+      //           parseInt(document.querySelector('.heart-num').innerText) = data.heartNum;
+      //         })
+      //         .catch((err) => console.error(err));
+      //     } else {
+      //       heart.classList.add('fa-regular');
+      //       heart.classList.remove('fa-solid');
+      //       fetch('/heart/remove', {
+      //         method: 'PUT',
+      //         headers: {
+      //           'Content-Type': 'application/json',
+      //         },
+      //         body: JSON.stringify({ heartNum, id: '<%= post._id %>' }),
+      //       })
+      //         .then((res) => res.json())
+      //         .then((data) => {
+      //           parseInt(document.querySelector('.heart-num').innerText) = data.heartNum;
+      //         })
+      //         .catch((err) => console.error(err));
+      //     }
+      //   });
+    </script>
+  </body>
+</html>

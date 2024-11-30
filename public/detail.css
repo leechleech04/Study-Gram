@@ -1,0 +1,43 @@
+.detail-box {
+  margin: 30px;
+  border: 2px solid #74c0fc;
+  border-radius: 10px;
+}
+
+.detail-user {
+  color: #808080;
+  padding: 30px 0 0 20px;
+}
+
+.detail-title {
+  padding: 0 0 30px 20px;
+  border-bottom: 2px solid #74c0fc;
+}
+
+.detail-content {
+  font-size: 20px;
+  min-height: 400px;
+  padding: 20px;
+}
+
+.icon-box div {
+  display: inline-block;
+  padding: 0 20px 20px;
+}
+
+.icon-box p {
+  display: inline-block;
+}
+
+.icon-box i {
+  font-size: 20px;
+}
+
+.heart i {
+  color: #ff0000;
+  cursor: pointer;
+}
+
+.comment i {
+  color: #74c0fc;
+}

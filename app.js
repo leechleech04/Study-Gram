@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.get('/login', (req, res) => {
 
 app.get('/list', async (req, res) => {
   let result = await db.collection('post').find().toArray();
-  res.render('list', { result: result });
+  res.render('list', { result });
 });
 
 app.get('/write', (req, res) => {
@@ -56,6 +56,7 @@ app.post('/newcontent', async (req, res) => {
         title: req.body.title,
         content: req.body.content,
         user: 'user1',
+        heart: 0,
       });
       res.redirect('/list');
     }
@@ -65,6 +66,31 @@ app.post('/newcontent', async (req, res) => {
   }
 });
 
-app.get('/detail', (req, res) => {
-  res.render('detail');
+app.get('/detail/:id', async (req, res) => {
+  try {
+    let post = await db
+      .collection('post')
+      .findOne({ _id: new ObjectId(req.params.id) });
+    if (post === null) {
+      res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
+    }
+    res.render('detail', { post });
+  } catch (e) {
+    console.error(e);
+    res.status(400).send('<h1>에러 발생</h1>');
+  }
 });
+
+// app.put('/heart/add', async (req, res) => {
+//   await db
+//     .collection('post')
+//     .updateOne({ _id: new ObjectId(req.body.id) }, { $inc: { heart: 1 } });
+//   res.json({ heart: req.body.heart + 1 });
+// });
+
+// app.put('/heart/remove', async (req, res) => {
+//   await db
+//     .collection('post')
+//     .updateOne({ _id: new ObjectId(req.body.id) }, { $inc: { heart: -1 } });
+//   res.json({ heart: req.body.heart - 1 });
+// });
