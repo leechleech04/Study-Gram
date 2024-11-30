@@ -45,10 +45,10 @@ app.get('/write', (req, res) => {
 
 app.post('/newcontent', async (req, res) => {
   try {
-    if (요청.body.title === '') {
+    if (req.body.title === '') {
       res.send('<h1>제목을 입력해주세요.</h1>');
       return;
-    } else if (요청.body.content === '') {
+    } else if (req.body.content === '') {
       res.send('<h1>내용을 입력해주세요.</h1>');
       return;
     } else {
