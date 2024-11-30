@@ -4,6 +4,8 @@ const { MongoClient } = require('mongodb');
 
 const app = express();
 
+app.set('view engine', 'ejs');
+
 app.use(express.static('public'));
 
 let db;
@@ -23,5 +25,23 @@ new MongoClient(url)
   });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/index.html'));
+  res.render('main');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/list', async (req, res) => {
+  let result = await db.collection('post').find().toArray();
+  console.log(result);
+  res.render('list', { result: result[0] });
+});
+
+app.get('/write', (req, res) => {
+  res.render('write');
+});
+
+app.get('/detail', (req, res) => {
+  res.render('detail');
 });

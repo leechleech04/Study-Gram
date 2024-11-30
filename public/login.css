@@ -58,6 +58,7 @@
   border: none;
   outline: none;
   border-bottom: 1px solid #74c0fc;
+  font-size: 20px;
 }
 
 .id-box input::placeholder,
