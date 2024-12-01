@@ -1,13 +1,12 @@
-.edit-btn {
+.btn-box {
   text-align: right;
   margin: 10px 30px;
 }
 
-.edit-btn button {
+.btn-box button {
   width: 100px;
   height: 40px;
   margin: 10px 0;
-  background-color: #74c0fc;
   color: white;
   border: none;
   font-size: 15px;
@@ -15,8 +14,20 @@
   cursor: pointer;
 }
 
-.edit-btn button:hover {
+.put-btn {
+  background-color: #74c0fc;
+}
+
+.put-btn:hover {
   background-color: #4dabf7;
+}
+
+.delete-btn {
+  background-color: #ff3333;
+}
+
+.delete-btn:hover {
+  background-color: #ff0000;
 }
 
 .detail-box {

@@ -12,7 +12,6 @@ a {
 }
 
 .content {
-  max-height: 22px;
   max-width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;

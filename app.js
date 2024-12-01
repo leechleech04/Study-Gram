@@ -121,6 +121,16 @@ app.put('/editcontent', async (req, res) => {
   }
 });
 
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    await db.collection('post').deleteOne({ _id: new ObjectId(req.params.id) });
+    res.redirect('/list');
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('<h1>에러 발생</h1>');
+  }
+});
+
 // app.put('/heart/add', async (req, res) => {
 //   await db
 //     .collection('post')

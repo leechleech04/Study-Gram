@@ -9,8 +9,9 @@
   </head>
   <body>
     <%- include('header.ejs') %>
-    <div class="edit-btn">
-      <a href="/edit/<%= post._id %>"><button>수정</button></a>
+    <div class="btn-box">
+      <a href="/edit/<%= post._id %>"><button class="put-btn">수정</button></a>
+      <button class="delete-btn">삭제</button>
     </div>
     <div class="detail-box">
       <p class="detail-user"><%= post.user %></p>
@@ -23,7 +24,7 @@
         </div>
         <div class="comment">
           <i class="fa-regular fa-comment"></i>
-          <p class="comment-num">20,000</p>
+          <p class="comment-num">0</p>
         </div>
       </div>
     </div>
@@ -33,6 +34,20 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      document.querySelector('.delete-btn').addEventListener('click', () => {
+        fetch('/delete/<%= post._id %>', {
+          method: 'DELETE',
+        })
+          .then((response) => {
+            if (response.redirected) {
+              // 서버가 리디렉션을 보낸 경우 클라이언트에서 직접 리디렉션
+              window.location.href = response.url;
+            } else {
+              return response.json(); // 필요하면 응답 처리
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      });
       //   const heart = document.querySelector('.fa-heart');
       //   heart.addEventListener('click', () => {
       //     let heartNum = parseInt(document.querySelector('.heart-num').innerText);
