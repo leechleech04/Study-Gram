@@ -36,8 +36,28 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-app.get('/list', async (req, res) => {
-  let result = await db.collection('post').find().toArray();
+app.get('/list/start', async (req, res) => {
+  let result = await db.collection('post').find().limit(5).toArray();
+  res.render('list', { result });
+});
+
+app.get('/list/prev/:id', async (req, res) => {
+  let result = await db
+    .collection('post')
+    .find({ _id: { $lt: new ObjectId(req.params.id) } })
+    .sort({ _id: -1 })
+    .limit(5)
+    .toArray();
+  result.reverse();
+  res.render('list', { result });
+});
+
+app.get('/list/next/:id', async (req, res) => {
+  let result = await db
+    .collection('post')
+    .find({ _id: { $gt: new ObjectId(req.params.id) } })
+    .limit(5)
+    .toArray();
   res.render('list', { result });
 });
 

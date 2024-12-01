@@ -17,6 +17,14 @@
       </div>
     </a>
     <% } %>
+    <div class="page-btn">
+      <a href="/list/prev/<%= result[0]._id %>"
+        ><button><i class="fa-solid fa-angle-left"></i> 이전</button></a
+      >
+      <a href="/list/next/<%= result[result.length - 1]._id %>"
+        ><button>다음 <i class="fa-solid fa-angle-right"></i></button
+      ></a>
+    </div>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"
