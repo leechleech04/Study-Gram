@@ -9,6 +9,9 @@
   </head>
   <body>
     <%- include('header.ejs') %>
+    <div class="edit-btn">
+      <a href="/edit/<%= post._id %>"><button>수정</button></a>
+    </div>
     <div class="detail-box">
       <p class="detail-user"><%= post.user %></p>
       <h1 class="detail-title"><%= post.title %></h1>

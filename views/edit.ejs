@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyGram</title>
+    <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/edit.css" />
+  </head>
+  <body>
+    <%- include('header.ejs') %>
+    <div class="write-box">
+      <form method="POST" action="/editcontent?_method=PUT">
+        <input value="<%= post._id %>" name="id" style="display : none">
+        <div class="title-input">
+          <input
+            type="text"
+            required
+            autofocus
+            placeholder="제목"
+            name="title"
+            value="<%= post.title %>"
+          />
+        </div>
+        <div class="content-input">
+          <textarea
+            required
+            placeholder="내용을 입력하세요"
+            name="content"
+          ><%= post.content %></textarea>
+        </div>
+        <div class="btn-box">
+          <a href="/list"><button class="cancel-btn">취소</button></a>
+          <button type="submit" class="submit-btn">수정</button>
+      </form>
+    </div>
+    <script>
+      const textarea = document.querySelector('textarea');
+      textarea.addEventListener('input', () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      });
+    </script>
+    <script
+      src="https://kit.fontawesome.com/a99ca2fd10.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

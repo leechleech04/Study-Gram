@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
+const methodOverride = require('method-override');
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 let db;
 const url =
@@ -78,6 +80,44 @@ app.get('/detail/:id', async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(400).send('<h1>에러 발생</h1>');
+  }
+});
+
+app.get('/edit/:id', async (req, res) => {
+  try {
+    let post = await db
+      .collection('post')
+      .findOne({ _id: new ObjectId(req.params.id) });
+    if (post === null) {
+      res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
+    }
+    res.render('edit', { post });
+  } catch (e) {
+    console.error(e);
+    res.status(400).send('<h1>에러 발생</h1>');
+  }
+});
+
+app.put('/editcontent', async (req, res) => {
+  try {
+    if (req.body.title === '') {
+      res.send('<h1>제목을 입력해주세요.</h1>');
+      return;
+    } else if (req.body.content === '') {
+      res.send('<h1>내용을 입력해주세요.</h1>');
+      return;
+    } else {
+      await db
+        .collection('post')
+        .updateOne(
+          { _id: new ObjectId(req.body.id) },
+          { $set: { title: req.body.title, content: req.body.content } }
+        );
+      res.redirect('/list');
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('<h1>에러 발생</h1>');
   }
 });
 

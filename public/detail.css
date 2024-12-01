@@ -1,5 +1,26 @@
+.edit-btn {
+  text-align: right;
+  margin: 10px 30px;
+}
+
+.edit-btn button {
+  width: 100px;
+  height: 40px;
+  margin: 10px 0;
+  background-color: #74c0fc;
+  color: white;
+  border: none;
+  font-size: 15px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.edit-btn button:hover {
+  background-color: #4dabf7;
+}
+
 .detail-box {
-  margin: 30px;
+  margin: 10px 30px;
   border: 2px solid #74c0fc;
   border-radius: 10px;
 }
