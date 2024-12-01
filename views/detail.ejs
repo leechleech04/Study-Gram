@@ -40,49 +40,13 @@
         })
           .then((response) => {
             if (response.redirected) {
-              // 서버가 리디렉션을 보낸 경우 클라이언트에서 직접 리디렉션
               window.location.href = response.url;
             } else {
-              return response.json(); // 필요하면 응답 처리
+              return response.json();
             }
           })
           .catch((error) => console.error('Error:', error));
       });
-      //   const heart = document.querySelector('.fa-heart');
-      //   heart.addEventListener('click', () => {
-      //     let heartNum = parseInt(document.querySelector('.heart-num').innerText);
-      //     if (heart.classList.contains('fa-regular')) {
-      //       heart.classList.add('fa-solid');
-      //       heart.classList.remove('fa-regular');
-      //       fetch('/heart/add', {
-      //         method: 'PUT',
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //         },
-      //         body: JSON.stringify({ heartNum: heartNum, id: '<%= post._id %>' }),
-      //       })
-      //         .then((res) => res.json())
-      //         .then((data) => {
-      //           parseInt(document.querySelector('.heart-num').innerText) = data.heartNum;
-      //         })
-      //         .catch((err) => console.error(err));
-      //     } else {
-      //       heart.classList.add('fa-regular');
-      //       heart.classList.remove('fa-solid');
-      //       fetch('/heart/remove', {
-      //         method: 'PUT',
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //         },
-      //         body: JSON.stringify({ heartNum, id: '<%= post._id %>' }),
-      //       })
-      //         .then((res) => res.json())
-      //         .then((data) => {
-      //           parseInt(document.querySelector('.heart-num').innerText) = data.heartNum;
-      //         })
-      //         .catch((err) => console.error(err));
-      //     }
-      //   });
     </script>
   </body>
 </html>

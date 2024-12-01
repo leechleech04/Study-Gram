@@ -9,7 +9,7 @@
   </head>
   <body>
     <%- include('header.ejs') %> <% for (let i = 0; i < result.length; i++) { %>
-    <a href="detail/<%= result[i]._id %>">
+    <a href="/detail/<%= result[i]._id %>">
       <div class="content-box">
         <h2 class="content-title"><%= result[i].title %></h2>
         <p class="content"><%= result[i].content %></p>
@@ -18,13 +18,33 @@
     </a>
     <% } %>
     <div class="page-btn">
-      <a href="/list/prev/<%= result[0]._id %>"
-        ><button><i class="fa-solid fa-angle-left"></i> 이전</button></a
+      <a href="/list/<%= currentPage - 1 %>" class="prev-link"
+        ><button class="prev-btn">
+          <i class="fa-solid fa-angle-left"></i> 이전
+        </button></a
       >
-      <a href="/list/next/<%= result[result.length - 1]._id %>"
-        ><button>다음 <i class="fa-solid fa-angle-right"></i></button
+      <a href="/list/<%= currentPage + 1 %>" class="next-link"
+        ><button class="next-btn">
+          다음 <i class="fa-solid fa-angle-right"></i></button
       ></a>
     </div>
+    <script>
+      const prevLink = document.querySelector('.prev-link');
+      const nextLink = document.querySelector('.next-link');
+      const prevBtn = document.querySelector('.prev-btn');
+      const nextBtn = document.querySelector('.next-btn');
+      if ('<%= currentPage %>' == 1) {
+        prevLink.style.pointerEvents = 'none';
+        prevBtn.style.backgroundColor = '#808080';
+        prevBtn.style.cursor = 'default';
+        prevBtn.disabled = true;
+      } else if ('<%= currentPage %>' == '<%= totalPages %>') {
+        nextLink.style.pointerEvents = 'none';
+        nextBtn.style.backgroundColor = '#808080';
+        nextBtn.style.cursor = 'default';
+        nextBtn.disabled = true;
+      }
+    </script>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"

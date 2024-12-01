@@ -36,29 +36,47 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-app.get('/list/start', async (req, res) => {
-  let result = await db.collection('post').find().limit(5).toArray();
-  res.render('list', { result });
-});
+// app.get('/list/prev/:id', async (req, res) => {
+//   let result = await db
+//     .collection('post')
+//     .find({ _id: { $lt: new ObjectId(req.params.id) } })
+//     .sort({ _id: -1 })
+//     .limit(5)
+//     .toArray();
+//   result.reverse();
+//   res.render('list', { result });
+// });
 
-app.get('/list/prev/:id', async (req, res) => {
+// app.get('/list/next/:id', async (req, res) => {
+//   let result = await db
+//     .collection('post')
+//     .find({ _id: { $gt: new ObjectId(req.params.id) } })
+//     .limit(5)
+//     .toArray();
+//   res.render('list', { result });
+// });
+
+app.get('/list/:page', async (req, res) => {
+  let page = parseInt(req.params.page) || 1;
+  const PAGE_SIZE = 5;
+  const skip = (page - 1) * PAGE_SIZE;
+
   let result = await db
     .collection('post')
-    .find({ _id: { $lt: new ObjectId(req.params.id) } })
-    .sort({ _id: -1 })
-    .limit(5)
+    .find()
+    .skip(skip)
+    .limit(PAGE_SIZE)
     .toArray();
-  result.reverse();
-  res.render('list', { result });
-});
 
-app.get('/list/next/:id', async (req, res) => {
-  let result = await db
-    .collection('post')
-    .find({ _id: { $gt: new ObjectId(req.params.id) } })
-    .limit(5)
-    .toArray();
-  res.render('list', { result });
+  let totalPosts = await db.collection('post').countDocuments();
+
+  const totalPages = Math.ceil(totalPosts / PAGE_SIZE);
+
+  res.render('list', {
+    result,
+    currentPage: page,
+    totalPages: totalPages,
+  });
 });
 
 app.get('/write', (req, res) => {
@@ -80,7 +98,7 @@ app.post('/newcontent', async (req, res) => {
         user: 'user1',
         heart: 0,
       });
-      res.redirect('/list');
+      res.redirect('/list/1');
     }
   } catch (e) {
     console.error(e);
@@ -133,7 +151,7 @@ app.put('/editcontent', async (req, res) => {
           { _id: new ObjectId(req.body.id) },
           { $set: { title: req.body.title, content: req.body.content } }
         );
-      res.redirect('/list');
+      res.redirect('/list/1');
     }
   } catch (e) {
     console.error(e);
@@ -144,23 +162,9 @@ app.put('/editcontent', async (req, res) => {
 app.delete('/delete/:id', async (req, res) => {
   try {
     await db.collection('post').deleteOne({ _id: new ObjectId(req.params.id) });
-    res.redirect('/list');
+    res.redirect('/list/1');
   } catch (e) {
     console.error(e);
     res.status(500).send('<h1>에러 발생</h1>');
   }
 });
-
-// app.put('/heart/add', async (req, res) => {
-//   await db
-//     .collection('post')
-//     .updateOne({ _id: new ObjectId(req.body.id) }, { $inc: { heart: 1 } });
-//   res.json({ heart: req.body.heart + 1 });
-// });
-
-// app.put('/heart/remove', async (req, res) => {
-//   await db
-//     .collection('post')
-//     .updateOne({ _id: new ObjectId(req.body.id) }, { $inc: { heart: -1 } });
-//   res.json({ heart: req.body.heart - 1 });
-// });
