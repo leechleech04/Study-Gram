@@ -3,7 +3,8 @@
   margin: 10px 30px;
 }
 
-.btn-box button {
+.btn-box button,
+.delete-box button {
   width: 100px;
   height: 40px;
   margin: 10px 0;
@@ -22,12 +23,46 @@
   background-color: #4dabf7;
 }
 
-.delete-btn {
+.delete-btn,
+.delete-yes {
   background-color: #ff3333;
 }
 
-.delete-btn:hover {
+.delete-btn:hover,
+.delete-yes:hover {
   background-color: #ff0000;
+}
+
+.gray-bg {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgb(87, 87, 87, 0.7);
+  z-index: 10;
+}
+
+.delete-box {
+  background-color: #ffffff;
+  border: 3px solid #74c0fc;
+  border-radius: 10px;
+  padding: 30px 50px;
+}
+
+.delete-btn-box {
+  text-align: right;
+  padding-top: 10px;
+}
+
+.delete-no {
+  background-color: #aaa5a5;
+}
+
+.delete-no:hover {
+  background-color: #808080;
 }
 
 .detail-box {

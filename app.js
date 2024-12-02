@@ -2,6 +2,11 @@ const express = require('express');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 const methodOverride = require('method-override');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
+require('dotenv').config();
 
 const app = express();
 
@@ -11,16 +16,24 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(passport.initialize());
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.session());
 
 let db;
-const url =
-  'mongodb+srv://lch2023:aa**895623@cluster0.y9ddq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const url = process.env.MONGODB_URL;
 new MongoClient(url)
   .connect()
   .then((client) => {
     console.log('DB is connected');
     db = client.db('studygram');
-    app.listen(8080, () => {
+    app.listen(process.env.PORT, () => {
       console.log('App listening on port 8080.');
     });
   })
@@ -35,26 +48,6 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('login');
 });
-
-// app.get('/list/prev/:id', async (req, res) => {
-//   let result = await db
-//     .collection('post')
-//     .find({ _id: { $lt: new ObjectId(req.params.id) } })
-//     .sort({ _id: -1 })
-//     .limit(5)
-//     .toArray();
-//   result.reverse();
-//   res.render('list', { result });
-// });
-
-// app.get('/list/next/:id', async (req, res) => {
-//   let result = await db
-//     .collection('post')
-//     .find({ _id: { $gt: new ObjectId(req.params.id) } })
-//     .limit(5)
-//     .toArray();
-//   res.render('list', { result });
-// });
 
 app.get('/list/:page', async (req, res) => {
   let page = parseInt(req.params.page) || 1;

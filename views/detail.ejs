@@ -13,6 +13,15 @@
       <a href="/edit/<%= post._id %>"><button class="put-btn">수정</button></a>
       <button class="delete-btn">삭제</button>
     </div>
+    <div class="gray-bg" style="display: none">
+      <div class="delete-box">
+        <h2>정말 삭제하시겠습니까?</h2>
+        <div class="delete-btn-box">
+          <button class="delete-yes">삭제</button>
+          <button class="delete-no">취소</button>
+        </div>
+      </div>
+    </div>
     <div class="detail-box">
       <p class="detail-user"><%= post.user %></p>
       <h1 class="detail-title"><%= post.title %></h1>
@@ -34,7 +43,19 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      const modal = document.querySelector('.gray-bg');
       document.querySelector('.delete-btn').addEventListener('click', () => {
+        if (modal.style.display == 'none') {
+          modal.style.display = 'flex';
+        } else {
+          modal.style.display = 'none';
+        }
+      });
+      document.querySelector('.delete-no').addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+      document.querySelector('.delete-yes').addEventListener('click', () => {
         fetch('/delete/<%= post._id %>', {
           method: 'DELETE',
         })
