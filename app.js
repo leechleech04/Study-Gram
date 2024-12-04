@@ -5,6 +5,8 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
+const MongoStore = require('connect-mongo');
 
 require('dotenv').config();
 
@@ -16,14 +18,19 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(passport.initialize());
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: { maxAge: 60 * 60 * 1000 },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URL,
+      dbName: 'forum',
+    }),
   })
 );
+app.use(passport.initialize());
 app.use(passport.session());
 
 let db;
@@ -41,11 +48,48 @@ new MongoClient(url)
     console.log(err);
   });
 
+passport.use(
+  new LocalStrategy(async (inputId, inputPw, cb) => {
+    try {
+      let result = await db.collection('user').findOne({ username: inputId });
+      if (!result) {
+        return cb(null, false, { message: '존재하지 않는 사용자입니다.' });
+      }
+      if (await bcrypt.compare(inputPw, result.password)) {
+        return cb(null, result);
+      } else {
+        return cb(null, false, { message: '옳지 않은 비밀번호입니다.' });
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('<h1>에러 발생</h1>');
+    }
+  })
+);
+
+passport.serializeUser((user, done) => {
+  console.log(user);
+  process.nextTick(() => {
+    done(null, { id: user._id, username: user.username });
+  });
+});
+
+passport.deserializeUser(async (user, done) => {
+  let result = await db
+    .collection('user')
+    .findOne({ _id: new ObjectId(user.id) });
+  delete result.password;
+  process.nextTick(() => {
+    done(null, result);
+  });
+});
+
 app.get('/', (req, res) => {
   res.render('main');
 });
 
 app.get('/login', (req, res) => {
+  console.log(req.user);
   res.render('login');
 });
 
@@ -160,4 +204,42 @@ app.delete('/delete/:id', async (req, res) => {
     console.error(e);
     res.status(500).send('<h1>에러 발생</h1>');
   }
+});
+
+app.post('/login', async (req, res, next) => {
+  passport.authenticate('local', (error, user, info) => {
+    if (error) {
+      return res.status(500).json(error);
+    }
+    if (!user) {
+      return res.status(401).json(info.message);
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/');
+    });
+  })(req, res, next);
+});
+
+app.get('/mypage', (req, res) => {
+  if (req.user) {
+    res.render('mypage', { user: req.user });
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.post('/register', async (req, res) => {
+  let hash = await bcrypt.hash(req.body.password, 10);
+  await db.collection('user').insertOne({
+    username: req.body.username,
+    password: hash,
+  });
+  res.redirect('/');
 });
