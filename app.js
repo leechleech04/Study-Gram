@@ -68,7 +68,6 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log(user);
   process.nextTick(() => {
     done(null, { id: user._id, username: user.username });
   });
@@ -85,7 +84,8 @@ passport.deserializeUser(async (user, done) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('main');
+  console.log(req.user);
+  res.render('main', { username: req.user ? req.user.username : null });
 });
 
 app.get('/login', (req, res) => {
@@ -113,11 +113,16 @@ app.get('/list/:page', async (req, res) => {
     result,
     currentPage: page,
     totalPages: totalPages,
+    username: req.user ? req.user.username : null,
   });
 });
 
 app.get('/write', (req, res) => {
-  res.render('write');
+  if (req.user) {
+    res.render('write', { username: req.user.username });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.post('/newcontent', async (req, res) => {
@@ -132,7 +137,7 @@ app.post('/newcontent', async (req, res) => {
       await db.collection('post').insertOne({
         title: req.body.title,
         content: req.body.content,
-        user: 'user1',
+        user: req.user.username,
         heart: 0,
       });
       res.redirect('/list/1');
@@ -151,7 +156,10 @@ app.get('/detail/:id', async (req, res) => {
     if (post === null) {
       res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
     }
-    res.render('detail', { post });
+    res.render('detail', {
+      post,
+      username: req.user ? req.user.username : null,
+    });
   } catch (e) {
     console.error(e);
     res.status(400).send('<h1>에러 발생</h1>');
@@ -225,7 +233,7 @@ app.post('/login', async (req, res, next) => {
 
 app.get('/mypage', (req, res) => {
   if (req.user) {
-    res.render('mypage', { user: req.user });
+    res.render('mypage', { username: req.user.username });
   } else {
     res.redirect('/login');
   }
@@ -252,9 +260,18 @@ app.get('/checkDuplication/:username', async (req, res) => {
   let result = await db
     .collection('user')
     .findOne({ username: req.params.username });
-    if (result) {
-      res.json({valid: false});
-    } else {
-      res.json({valid: true});
+  if (result) {
+    res.json({ valid: false });
+  } else {
+    res.json({ valid: true });
+  }
+});
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
     }
+    res.redirect('/');
+  });
 });

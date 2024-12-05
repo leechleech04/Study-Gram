@@ -11,9 +11,16 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
     <%- include('header.ejs') %>
+    <div class="hello">
+      <% if (username) { %>
+      <h1><%= username %>님</h1>
+      <% } %>
+      <h1>StudyGram에 오신 것을 환영합니다!</h1>
+    </div>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"
