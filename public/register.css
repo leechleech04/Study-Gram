@@ -18,6 +18,10 @@
   padding-right: 30px;
 }
 
+.id-box {
+  display: inline-block;
+}
+
 .id-box input,
 .pw-box input {
   width: 300px;
@@ -34,9 +38,9 @@
   font-size: 15px;
 }
 
-.btn-box button {
-  width: 100px;
-  height: 40px;
+.duplication {
+  width: 80px;
+  height: 30px;
   margin: 10px 0;
   background-color: #74c0fc;
   color: white;
@@ -44,6 +48,38 @@
   font-size: 15px;
   border-radius: 3px;
   cursor: pointer;
+}
+
+.duplication:hover {
+  background-color: #4dabf7;
+}
+
+.duplication-yes {
+  color: #ff0000;
+}
+
+.duplication-no {
+  color: #00ff00;
+}
+
+.second-pw {
+  display: block;
+}
+
+.pw-not-matched {
+  color: #ff0000;
+}
+
+.btn-box button {
+  width: 100px;
+  height: 40px;
+  margin: 10px 0;
+  background-color: #808080;
+  cursor: default;
+  color: white;
+  border: none;
+  font-size: 15px;
+  border-radius: 3px;
 }
 
 .btn-box button:hover {

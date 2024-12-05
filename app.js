@@ -26,7 +26,7 @@ app.use(
     cookie: { maxAge: 60 * 60 * 1000 },
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URL,
-      dbName: 'forum',
+      dbName: 'studygram',
     }),
   })
 );
@@ -237,9 +237,24 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
   let hash = await bcrypt.hash(req.body.password, 10);
-  await db.collection('user').insertOne({
-    username: req.body.username,
-    password: hash,
-  });
-  res.redirect('/');
+  if (await db.collection('user').findOne({ username: req.body.username })) {
+    res.send('<h1>이미 존재하는 사용자입니다.</h1>');
+  } else {
+    await db.collection('user').insertOne({
+      username: req.body.username,
+      password: hash,
+    });
+    res.redirect('/');
+  }
+});
+
+app.get('/checkDuplication/:username', async (req, res) => {
+  let result = await db
+    .collection('user')
+    .findOne({ username: req.params.username });
+    if (result) {
+      res.json({valid: false});
+    } else {
+      res.json({valid: true});
+    }
 });

@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyGram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/header.css" />
     <link rel="stylesheet" href="/register.css">
   </head>
@@ -20,14 +23,20 @@
                 name="username"
               />
             </div>
+            <button type="button" class="duplication">중복 확인</button>
+            <p class="duplication-yes" style="display: none;">* 이미 사용 중인 아이디입니다. *</p>
+            <p class="duplication-no" style="display: none;"> * 사용 가능한 아이디입니다. *</p>
             <div class="pw-box">
               <input
                 type="password"
                 required
                 placeholder="비밀번호를 입력하세요"
                 name="password"
+                class="first-pw"
               />
+              <input type="password" required placeholder="비밀번호를 한 번 더 입력하세요" class="second-pw">
             </div>
+            <p class="pw-not-matched" style="display: none;">* 비밀번호가 일치하지 않습니다. *</p>
           </div>
           <div class="btn-box">
             <button type="submit">가입</button>
@@ -35,6 +44,47 @@
         </form>
       </div>
     </div>
+    <script>
+      const duplication = document.querySelector('.duplication');
+      const submitBtn = document.querySelector('.btn-box button');
+      duplication.addEventListener('click', () => {
+        let id = document.querySelector('.id-box input').value;
+        fetch(`/checkDuplication/${id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.valid) {
+              document.querySelector('.duplication-yes').style.display = 'none';
+              document.querySelector('.duplication-no').style.display = 'block';
+              submitBtn.style.backgroundColor = '#74c0fc';
+              submitBtn.style.cursor = 'pointer';
+              submitBtn.disabled = false;
+            } else {
+              document.querySelector('.duplication-yes').style.display = 'block';
+              document.querySelector('.duplication-no').style.display = 'none';
+              submitBtn.style.backgroundColor = '#808080';
+              submitBtn.style.cursor = 'default';
+              submitBtn.disabled = true;
+            }
+          })
+      })
+
+      const secondPw = document.querySelector('.second-pw');
+      secondPw.addEventListener('input', () => {
+        let pw = document.querySelector('.first-pw').value;
+        let secPw = secondPw.value;
+        if (pw === secPw) {
+          document.querySelector('.pw-not-matched').style.display = 'none';
+          submitBtn.style.backgroundColor = '#74c0fc';
+          submitBtn.style.cursor = 'pointer';
+          submitBtn.disabled = false;
+        } else {
+          document.querySelector('.pw-not-matched').style.display = 'block';
+          submitBtn.style.backgroundColor = '#808080';
+          submitBtn.style.cursor = 'default';
+          submitBtn.disabled = true;
+        }
+      })
+    </script>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"
