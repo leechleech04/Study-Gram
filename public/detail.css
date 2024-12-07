@@ -100,12 +100,12 @@
   font-size: 20px;
 }
 
-.heart i {
+.heart-icon i {
   color: #ff0000;
   cursor: pointer;
 }
 
-.comment i {
+.comment-icon i {
   color: #74c0fc;
 }
 

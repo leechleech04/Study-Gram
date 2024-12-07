@@ -34,11 +34,11 @@
       <h1 class="detail-title"><%= post.title %></h1>
       <p class="detail-content"><%= post.content %></p>
       <div class="icon-box">
-        <div class="heart">
+        <div class="heart-icon">
           <i class="fa-regular fa-heart"></i>
           <p class="heart-num"><%= post.heart %></p>
         </div>
-        <div class="comment">
+        <div class="comment-icon">
           <i class="fa-regular fa-comment"></i>
           <p class="comment-num">0</p>
         </div>
@@ -54,45 +54,12 @@
         <button type="submit">등록</button>
       </form>
       <div class="comment-list">
+        <% for (let i = 0; i < comments.length; i++) { %>
         <div class="comment">
-          <p class="comment-user">댓글을 단 유저</p>
-          <p class="comment-content">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
-            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
-            sed mollitia architecto rem magni eveniet ipsum beatae sint
-            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
-            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
-            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
-            sapiente temporibus debitis eaque quibusdam nulla nobis esse
-            laborum?
-          </p>
+          <p class="comment-user"><%= comments[i].user %></p>
+          <p class="comment-content"><%= comments[i].content %></p>
         </div>
-        <div class="comment">
-          <p class="comment-user">댓글을 단 유저</p>
-          <p class="comment-content">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
-            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
-            sed mollitia architecto rem magni eveniet ipsum beatae sint
-            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
-            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
-            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
-            sapiente temporibus debitis eaque quibusdam nulla nobis esse
-            laborum?
-          </p>
-        </div>
-        <div class="comment">
-          <p class="comment-user">댓글을 단 유저</p>
-          <p class="comment-content">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
-            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
-            sed mollitia architecto rem magni eveniet ipsum beatae sint
-            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
-            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
-            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
-            sapiente temporibus debitis eaque quibusdam nulla nobis esse
-            laborum?
-          </p>
-        </div>
+        <% } %>
       </div>
     </div>
     <script
@@ -125,7 +92,8 @@
           })
           .catch((error) => console.error('Error:', error));
       });
-
+    </script>
+    <script>
       const textarea = document.querySelector('textarea');
       textarea.addEventListener('input', () => {
         textarea.style.height = 'auto';

@@ -153,12 +153,17 @@ app.get('/detail/:id', async (req, res) => {
     let post = await db
       .collection('post')
       .findOne({ _id: new ObjectId(req.params.id) });
+    let comments = await db
+      .collection('comment')
+      .find({ parentId: new ObjectId(req.params.id) })
+      .toArray();
     if (post === null) {
       res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
     }
     res.render('detail', {
       post,
       username: req.user ? req.user.username : null,
+      comments,
     });
   } catch (e) {
     console.error(e);
@@ -274,4 +279,16 @@ app.get('/logout', (req, res) => {
     }
     res.redirect('/');
   });
+});
+
+app.post('/comment/:id', async (req, res) => {
+  let post = await db
+    .collection('post')
+    .findOne({ _id: new ObjectId(req.params.id) });
+  await db.collection('comment').insertOne({
+    parentId: new ObjectId(req.params.id),
+    user: req.user.username,
+    content: req.body.comment,
+  });
+  res.redirect(`/detail/${req.params.id}`);
 });
