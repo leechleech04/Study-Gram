@@ -138,13 +138,13 @@ app.post('/newcontent', async (req, res) => {
       res.send('<h1>내용을 입력해주세요.</h1>');
       return;
     } else {
-      await db.collection('post').insertOne({
+      let result = await db.collection('post').insertOne({
         title: req.body.title,
         content: req.body.content,
         user: req.user.username,
         heart: 0,
       });
-      res.redirect('/list/1');
+      res.redirect(`/detail/${result.insertedId}`);
     }
   } catch (e) {
     console.error(e);
@@ -216,6 +216,9 @@ app.put('/editcontent', async (req, res) => {
 app.delete('/delete/:id', async (req, res) => {
   try {
     await db.collection('post').deleteOne({ _id: new ObjectId(req.params.id) });
+    await db
+      .collection('comment')
+      .deleteMany({ parentId: new ObjectId(req.params.id) });
     res.redirect('/list/1');
   } catch (e) {
     console.error(e);
@@ -308,4 +311,11 @@ app.put('/put-comment/:id', async (req, res) => {
       { $set: { content: req.body.put_comment } }
     );
   res.redirect(`/detail/${comment.parentId}`);
+});
+
+app.delete('/delete-comment/:id', async (req, res) => {
+  let comment = await db
+    .collection('comment')
+    .deleteOne({ _id: new ObjectId(req.params.id) });
+  res.json({ result: comment.acknowledged });
 });

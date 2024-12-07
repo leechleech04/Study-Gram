@@ -21,7 +21,7 @@
     </div>
     <div class="gray-bg" style="display: none">
       <div class="delete-box">
-        <h2>정말 삭제하시겠습니까?</h2>
+        <h2>게시물을 삭제하시겠습니까?</h2>
         <div class="delete-btn-box">
           <button class="delete-yes">삭제</button>
           <button class="delete-no">취소</button>
@@ -40,7 +40,7 @@
         </div>
         <div class="comment-icon">
           <i class="fa-regular fa-comment"></i>
-          <p class="comment-num">0</p>
+          <p class="comment-num"><%= comments.length %></p>
         </div>
       </div>
     </div>
@@ -55,7 +55,12 @@
       </form>
       <div class="comment-list">
         <% for (let i = 0; i < comments.length; i++) { %>
-        <div class="comment">
+        <div class="comment" data-id="<%= comments[i]._id %>">
+          <div class="comment-gray-bg" style="display: none">
+            <h2>댓글을 삭제하시겠습니까?</h2>
+            <button class="comment-delete-yes">삭제</button>
+            <button class="comment-delete-no">취소</button>
+          </div>
           <p class="comment-user"><%= comments[i].user %></p>
           <% if (username == comments[i].user) { %>
           <p class="put-delete">
@@ -110,6 +115,18 @@
       });
     </script>
     <script>
+      const comment_btn = document.querySelector('.comment-box button');
+      if ('<%= username %>') {
+        comment_btn.disabled = false;
+        comment_btn.style.backgroundColor = '#74c0fc';
+        comment_btn.style.cursor = 'pointer';
+      } else {
+        comment_btn.disabled = true;
+        comment_btn.style.backgroundColor = '#808080';
+        comment_btn.style.cursor = 'default';
+      }
+    </script>
+    <script>
       const textarea = document.querySelector('textarea');
       textarea.addEventListener('input', () => {
         textarea.style.height = 'auto';
@@ -126,6 +143,42 @@
               node.remove();
             }
           );
+        });
+      });
+    </script>
+    <script>
+      document.querySelectorAll('.delete-comment').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          for (let sibling of e.target.parentElement.parentElement.children) {
+            if (sibling.classList.contains('comment-gray-bg')) {
+              sibling.style.display = 'flex';
+            }
+          }
+        });
+      });
+      document.querySelectorAll('.comment-delete-no').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.target.parentElement.style.display = 'none';
+        });
+      });
+      document.querySelectorAll('.comment-delete-yes').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          fetch(
+            `/delete-comment/${e.target.parentElement.parentElement.dataset.id}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data) {
+                e.target.parentElement.parentElement.remove();
+              }
+            })
+            .catch((err) => console.error(err));
         });
       });
     </script>
