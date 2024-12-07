@@ -23,7 +23,11 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60 * 60 * 1000 },
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      maxAge: 60 * 60 * 1000,
+    },
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URL,
       dbName: 'studygram',
@@ -53,12 +57,12 @@ passport.use(
     try {
       let result = await db.collection('user').findOne({ username: inputId });
       if (!result) {
-        return cb(null, false, { message: '존재하지 않는 사용자입니다.' });
+        return cb(null, false, { message: 'id' });
       }
       if (await bcrypt.compare(inputPw, result.password)) {
         return cb(null, result);
       } else {
-        return cb(null, false, { message: '옳지 않은 비밀번호입니다.' });
+        return cb(null, false, { message: 'pw' });
       }
     } catch (e) {
       console.error(e);
@@ -90,7 +94,7 @@ app.get('/', (req, res) => {
 
 app.get('/login', (req, res) => {
   console.log(req.user);
-  res.render('login');
+  res.render('login', { msg: '' });
 });
 
 app.get('/list/:page', async (req, res) => {
@@ -225,7 +229,7 @@ app.post('/login', async (req, res, next) => {
       return res.status(500).json(error);
     }
     if (!user) {
-      return res.status(401).json(info.message);
+      return res.render('login', { msg: info.message });
     }
     req.logIn(user, (err) => {
       if (err) {

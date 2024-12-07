@@ -67,6 +67,11 @@
   font-size: 15px;
 }
 
+.id-error,
+.pw-error {
+  color: #ff0000;
+}
+
 .btn-box button {
   width: 100px;
   height: 40px;
