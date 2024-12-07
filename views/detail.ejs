@@ -44,7 +44,57 @@
         </div>
       </div>
     </div>
-    <div class="comment-box"></div>
+    <div class="comment-box">
+      <form action="/comment/<%= post._id %>" method="POST">
+        <textarea
+          name="comment"
+          required
+          placeholder="댓글을 입력하세요"
+        ></textarea>
+        <button type="submit">등록</button>
+      </form>
+      <div class="comment-list">
+        <div class="comment">
+          <p class="comment-user">댓글을 단 유저</p>
+          <p class="comment-content">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
+            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
+            sed mollitia architecto rem magni eveniet ipsum beatae sint
+            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
+            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
+            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
+            sapiente temporibus debitis eaque quibusdam nulla nobis esse
+            laborum?
+          </p>
+        </div>
+        <div class="comment">
+          <p class="comment-user">댓글을 단 유저</p>
+          <p class="comment-content">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
+            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
+            sed mollitia architecto rem magni eveniet ipsum beatae sint
+            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
+            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
+            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
+            sapiente temporibus debitis eaque quibusdam nulla nobis esse
+            laborum?
+          </p>
+        </div>
+        <div class="comment">
+          <p class="comment-user">댓글을 단 유저</p>
+          <p class="comment-content">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
+            nulla facilis, sapiente, libero quod accusantium accusamus animi qui
+            sed mollitia architecto rem magni eveniet ipsum beatae sint
+            perspiciatis? Molestias, magnam! Lorem ipsum, dolor sit amet
+            consectetur adipisicing elit. Amet velit omnis laboriosam dolorem
+            ullam ducimus. Ducimus harum voluptatum, libero tempore placeat
+            sapiente temporibus debitis eaque quibusdam nulla nobis esse
+            laborum?
+          </p>
+        </div>
+      </div>
+    </div>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"
@@ -74,6 +124,12 @@
             }
           })
           .catch((error) => console.error('Error:', error));
+      });
+
+      const textarea = document.querySelector('textarea');
+      textarea.addEventListener('input', () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
       });
     </script>
   </body>

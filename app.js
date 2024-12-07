@@ -174,7 +174,7 @@ app.get('/edit/:id', async (req, res) => {
     if (post === null) {
       res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
     }
-    res.render('edit', { post });
+    res.render('edit', { post, username: req.user.username });
   } catch (e) {
     console.error(e);
     res.status(400).send('<h1>에러 발생</h1>');
