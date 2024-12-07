@@ -57,6 +57,10 @@ nav a {
   font-weight: 700;
 }
 
+nav a:hover {
+  color: #4dabf7;
+}
+
 .header-space {
   height: 100px;
 }

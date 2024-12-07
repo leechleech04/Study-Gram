@@ -161,6 +161,15 @@ app.get('/detail/:id', async (req, res) => {
       .collection('comment')
       .find({ parentId: new ObjectId(req.params.id) })
       .toArray();
+    let heart = false;
+    if (req.user) {
+      heart = (await db.collection('heart').findOne({
+        username: req.user.username,
+        postId: new ObjectId(req.params.id),
+      }))
+        ? true
+        : false;
+    }
     if (post === null) {
       res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
     }
@@ -168,6 +177,7 @@ app.get('/detail/:id', async (req, res) => {
       post,
       username: req.user ? req.user.username : null,
       comments,
+      heart,
     });
   } catch (e) {
     console.error(e);
@@ -318,4 +328,29 @@ app.delete('/delete-comment/:id', async (req, res) => {
     .collection('comment')
     .deleteOne({ _id: new ObjectId(req.params.id) });
   res.json({ result: comment.acknowledged });
+});
+
+app.post('/heart/:id', async (req, res) => {
+  let result;
+  if (
+    await db.collection('heart').findOne({
+      postId: new ObjectId(req.body.id),
+      username: req.user.username,
+    })
+  ) {
+    result = false;
+  } else {
+    await db.collection('heart').insertOne({
+      username: req.user.username,
+      postId: new ObjectId(req.body.id),
+    });
+    await db.collection('post').updateOne(
+      { _id: new ObjectId(req.body.id) },
+      {
+        $inc: { heart: 1 },
+      }
+    );
+    result = true;
+  }
+  res.json({ result, num: parseInt(req.body.num) + 1 });
 });

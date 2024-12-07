@@ -90,14 +90,11 @@
 .icon-box div {
   display: inline-block;
   padding: 0 20px 20px;
+  font-size: 25px;
 }
 
 .icon-box p {
   display: inline-block;
-}
-
-.icon-box i {
-  font-size: 20px;
 }
 
 .heart-icon i {
