@@ -296,3 +296,16 @@ app.post('/comment/:id', async (req, res) => {
   });
   res.redirect(`/detail/${req.params.id}`);
 });
+
+app.put('/put-comment/:id', async (req, res) => {
+  let comment = await db.collection('comment').findOne({
+    _id: new ObjectId(req.params.id),
+  });
+  await db
+    .collection('comment')
+    .updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: { content: req.body.put_comment } }
+    );
+  res.redirect(`/detail/${comment.parentId}`);
+});

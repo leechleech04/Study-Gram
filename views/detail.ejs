@@ -57,8 +57,24 @@
         <% for (let i = 0; i < comments.length; i++) { %>
         <div class="comment">
           <p class="comment-user"><%= comments[i].user %></p>
+          <% if (username == comments[i].user) { %>
+          <p class="put-delete">
+            <span class="put-comment">수정</span
+            ><span class="delete-comment">삭제</span>
+          </p>
+          <% } %>
           <p class="comment-content"><%= comments[i].content %></p>
         </div>
+        <form
+          action="/put-comment/<%= comments[i]._id %>?_method=PUT"
+          method="POST"
+          style="display: none"
+        >
+          <textarea name="put_comment" required>
+<%= comments[i].content %></textarea
+          >
+          <button type="submit">수정</button>
+        </form>
         <% } %>
       </div>
     </div>
@@ -98,6 +114,19 @@
       textarea.addEventListener('input', () => {
         textarea.style.height = 'auto';
         textarea.style.height = `${textarea.scrollHeight}px`;
+      });
+    </script>
+    <script>
+      document.querySelectorAll('.put-comment').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.target.parentElement.parentElement.nextElementSibling.style.display =
+            'block';
+          Array.from(e.target.parentElement.parentElement.children).forEach(
+            (node) => {
+              node.remove();
+            }
+          );
+        });
       });
     </script>
   </body>

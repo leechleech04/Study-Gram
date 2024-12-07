@@ -151,8 +151,22 @@
 }
 
 .comment-user {
+  display: inline-block;
   font-size: 18px;
   font-weight: 800;
+}
+
+.put-delete {
+  display: inline-block;
+  margin: 0 20px;
+  color: #808080;
+  text-decoration: underline;
+}
+
+.put-comment,
+.delete-comment {
+  margin: 0 5px;
+  cursor: pointer;
 }
 
 .comment-content {
