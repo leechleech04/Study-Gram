@@ -7,6 +7,7 @@
     <ul>
       <li><a href="/list/1">게시물 목록</a></li>
       <li><a href="/write">글 쓰기</a></li>
+      <li><a href="/chatList">채팅 목록</a></li>
       <li><a href="/mypage">마이 페이지</a></li>
       <li><a href="/login">로그인</a></li>
     </ul>
@@ -15,7 +16,7 @@
 <div class="header-space"></div>
 <script>
   const loginOut = document.querySelector('a[href="/login"]');
-  if ('<%= username %>') {
+  if ('<%= user.username %>') {
     loginOut.innerText = '로그아웃';
     loginOut.setAttribute('href', '/logout');
   } else {

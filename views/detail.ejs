@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/detail.css" />
   </head>
   <body>
-    <%- include('header.ejs') %> <% if (username === post.user) { %>
+    <%- include('header.ejs') %> <% if (user.username === post.user) { %>
     <div class="btn-box">
       <a href="/edit/<%= post._id %>"><button class="put-btn">수정</button></a>
       <button class="delete-btn">삭제</button>
@@ -67,7 +67,7 @@
             <button class="comment-delete-no">취소</button>
           </div>
           <p class="comment-user"><%= comments[i].user %></p>
-          <% if (username == comments[i].user) { %>
+          <% if (user.username == comments[i].user) { %>
           <p class="put-delete">
             <span class="put-comment">수정</span
             ><span class="delete-comment">삭제</span>
@@ -94,7 +94,7 @@
     </div>
     <script>
       const comment_btn = document.querySelector('.comment-box button');
-      if ('<%= username %>') {
+      if ('<%= user.username %>') {
         comment_btn.disabled = false;
         comment_btn.style.backgroundColor = '#74c0fc';
         comment_btn.style.cursor = 'pointer';
@@ -109,7 +109,7 @@
         .querySelector('.fa-heart')
         .addEventListener('click', function (e) {
           if (e.target.classList.contains('fa-regular')) {
-            if ('<%= username %>') {
+            if ('<%= user.username %>') {
               fetch('/heart/<%= post._id %>', {
                 method: 'POST',
                 headers: {

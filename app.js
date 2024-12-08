@@ -91,7 +91,7 @@ passport.deserializeUser(async (user, done) => {
 
 app.get('/', (req, res) => {
   console.log(req.user);
-  res.render('main', { username: req.user ? req.user.username : null });
+  res.render('main', { user: req.user ? req.user : null });
 });
 
 app.get('/login', (req, res) => {
@@ -120,13 +120,13 @@ app.get('/list/:page', async (req, res) => {
     result,
     currentPage: page,
     totalPages: totalPages,
-    username: req.user ? req.user.username : null,
+    user: req.user ? req.user : null,
   });
 });
 
 app.get('/write', (req, res) => {
   if (req.user) {
-    res.render('write', { username: req.user.username });
+    res.render('write', { user: req.user });
   } else {
     res.redirect('/login');
   }
@@ -183,7 +183,7 @@ app.get('/detail/:id', async (req, res) => {
     }
     res.render('detail', {
       post,
-      username: req.user ? req.user.username : null,
+      user: req.user ? req.user : null,
       comments,
       heart,
     });
@@ -201,7 +201,7 @@ app.get('/edit/:id', async (req, res) => {
     if (post === null) {
       res.status(400).send('<h1>게시물이 존재하지 않습니다.</h1>');
     }
-    res.render('edit', { post, username: req.user.username });
+    res.render('edit', { post, user: req.user });
   } catch (e) {
     console.error(e);
     res.status(400).send('<h1>에러 발생</h1>');
@@ -267,7 +267,7 @@ app.post('/login', async (req, res, next) => {
 app.get('/mypage', (req, res) => {
   if (req.user) {
     res.render('mypage', {
-      username: req.user.username,
+      user: req.user,
       password: req.user.password,
     });
   } else {
@@ -392,4 +392,20 @@ app.delete('/delete-heart/:id', async (req, res) => {
     result = false;
   }
   res.json({ result, num: parseInt(req.body.num) - 1 });
+});
+
+app.get('/chatList', (req, res) => {
+  if (req.user) {
+    res.render('chatList', { user: req.user });
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.get('/chat', (req, res) => {
+  if (req.user) {
+    res.render('chat', { user: req.user });
+  } else {
+    res.redirect('/login');
+  }
 });
