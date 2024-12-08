@@ -11,10 +11,26 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/mypage.css" />
   </head>
   <body>
     <%- include('header.ejs') %>
-    <p>안녕하세요. <%= username %></p>
+    <div class="account container">
+      <h1>계정</h1>
+      <div class="id">
+        <h3>아이디</h3>
+        <p><%= username %></p>
+      </div>
+      <h3>비밀번호 변경</h3>
+    </div>
+    <div class="my_post container">
+      <h1>내 게시물</h1>
+      <h3>게시물 목록 보기</h3>
+    </div>
+    <div class="my_chat container">
+      <h1>내 채팅</h1>
+      <h3>채팅 목록 보기</h3>
+    </div>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"

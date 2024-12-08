@@ -1,0 +1,9 @@
+.container {
+  padding: 20px 30px;
+}
+
+.container h3,
+.container p {
+  display: inline-block;
+  padding: 5px 10px;
+}

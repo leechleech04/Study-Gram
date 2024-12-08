@@ -7,6 +7,10 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const MongoStore = require('connect-mongo');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const server = createServer(app);
+const io = new Server(server);
 
 require('dotenv').config();
 
@@ -37,14 +41,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+let connectDB = require('./db.js');
 let db;
-const url = process.env.MONGODB_URL;
-new MongoClient(url)
-  .connect()
+connectDB
   .then((client) => {
     console.log('DB is connected');
     db = client.db('studygram');
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log('App listening on port 8080.');
     });
   })
@@ -264,7 +267,10 @@ app.post('/login', async (req, res, next) => {
 
 app.get('/mypage', (req, res) => {
   if (req.user) {
-    res.render('mypage', { username: req.user.username });
+    res.render('mypage', {
+      username: req.user.username,
+      password: req.user.password,
+    });
   } else {
     res.redirect('/login');
   }
