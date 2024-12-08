@@ -10,31 +10,6 @@ document.querySelector('.delete-no').addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
-document.querySelector('.delete-yes').addEventListener('click', () => {
-  fetch('/delete/<%= post._id %>', {
-    method: 'DELETE',
-  })
-    .then((response) => {
-      if (response.redirected) {
-        window.location.href = response.url;
-      } else {
-        return response.json();
-      }
-    })
-    .catch((error) => console.error('Error:', error));
-});
-
-const comment_btn = document.querySelector('.comment-box button');
-if ('<%= username %>') {
-  comment_btn.disabled = false;
-  comment_btn.style.backgroundColor = '#74c0fc';
-  comment_btn.style.cursor = 'pointer';
-} else {
-  comment_btn.disabled = true;
-  comment_btn.style.backgroundColor = '#808080';
-  comment_btn.style.cursor = 'default';
-}
-
 const textarea = document.querySelector('textarea');
 textarea.addEventListener('input', () => {
   textarea.style.height = 'auto';
@@ -70,7 +45,7 @@ document.querySelectorAll('.comment-delete-no').forEach((btn) => {
 document.querySelectorAll('.comment-delete-yes').forEach((btn) => {
   btn.addEventListener('click', function (e) {
     fetch(
-      `/delete-comment/${e.target.parentElement.parentElement.dataset.id}`,
+      `/delete-comment/${e.target.parentElement.parentElement.dataset.comment_id}`,
       {
         method: 'DELETE',
         headers: {

@@ -20,6 +20,7 @@
         <h2 class="content-title"><%= result[i].title %></h2>
         <p class="content"><%= result[i].content %></p>
         <p class="content-user"><%= result[i].user %></p>
+        <p class="content-time"><%= result[i].createdAt.toLocaleString() %></p>
       </div>
     </a>
     <% } %>
@@ -40,6 +41,29 @@
       const prevBtn = document.querySelector('.prev-btn');
       const nextBtn = document.querySelector('.next-btn');
       if ('<%= currentPage %>' == 1) {
+        prevLink.style.pointerEvents = 'none';
+        prevBtn.style.backgroundColor = '#808080';
+        prevBtn.style.cursor = 'default';
+        prevBtn.disabled = true;
+      } else if ('<%= currentPage %>' == '<%= totalPages %>') {
+        nextLink.style.pointerEvents = 'none';
+        nextBtn.style.backgroundColor = '#808080';
+        nextBtn.style.cursor = 'default';
+        nextBtn.disabled = true;
+      }
+      if (
+        '<%= currentPage %>' == 1 &&
+        '<%= currentPage %>' == '<%= totalPages %>'
+      ) {
+        prevLink.style.pointerEvents = 'none';
+        prevBtn.style.backgroundColor = '#808080';
+        prevBtn.style.cursor = 'default';
+        prevBtn.disabled = true;
+        nextLink.style.pointerEvents = 'none';
+        nextBtn.style.backgroundColor = '#808080';
+        nextBtn.style.cursor = 'default';
+        nextBtn.disabled = true;
+      } else if ('<%= currentPage %>' == 1) {
         prevLink.style.pointerEvents = 'none';
         prevBtn.style.backgroundColor = '#808080';
         prevBtn.style.cursor = 'default';

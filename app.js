@@ -105,6 +105,7 @@ app.get('/list/:page', async (req, res) => {
   let result = await db
     .collection('post')
     .find()
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(PAGE_SIZE)
     .toArray();
@@ -138,11 +139,15 @@ app.post('/newcontent', async (req, res) => {
       res.send('<h1>내용을 입력해주세요.</h1>');
       return;
     } else {
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+      const kr_time_diff = 9 * 60 * 60 * 1000;
       let result = await db.collection('post').insertOne({
         title: req.body.title,
         content: req.body.content,
         user: req.user.username,
         heart: 0,
+        createdAt: new Date(utc + kr_time_diff),
       });
       res.redirect(`/detail/${result.insertedId}`);
     }
@@ -160,6 +165,7 @@ app.get('/detail/:id', async (req, res) => {
     let comments = await db
       .collection('comment')
       .find({ parentId: new ObjectId(req.params.id) })
+      .sort({ createdAt: -1 })
       .toArray();
     let heart = false;
     if (req.user) {
@@ -215,7 +221,7 @@ app.put('/editcontent', async (req, res) => {
           { _id: new ObjectId(req.body.id) },
           { $set: { title: req.body.title, content: req.body.content } }
         );
-      res.redirect('/list/1');
+      res.redirect(`/detail/${req.body.id}`);
     }
   } catch (e) {
     console.error(e);
@@ -229,6 +235,9 @@ app.delete('/delete/:id', async (req, res) => {
     await db
       .collection('comment')
       .deleteMany({ parentId: new ObjectId(req.params.id) });
+    await db
+      .collection('heart')
+      .deleteMany({ postId: new ObjectId(req.params.id) });
     res.redirect('/list/1');
   } catch (e) {
     console.error(e);
@@ -274,7 +283,7 @@ app.post('/register', async (req, res) => {
       username: req.body.username,
       password: hash,
     });
-    res.redirect('/');
+    res.redirect('/login');
   }
 });
 
@@ -299,6 +308,9 @@ app.get('/logout', (req, res) => {
 });
 
 app.post('/comment/:id', async (req, res) => {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+  const kr_time_diff = 9 * 60 * 60 * 1000;
   let post = await db
     .collection('post')
     .findOne({ _id: new ObjectId(req.params.id) });
@@ -306,6 +318,7 @@ app.post('/comment/:id', async (req, res) => {
     parentId: new ObjectId(req.params.id),
     user: req.user.username,
     content: req.body.comment,
+    createdAt: new Date(utc + kr_time_diff),
   });
   res.redirect(`/detail/${req.params.id}`);
 });
@@ -334,7 +347,7 @@ app.post('/heart/:id', async (req, res) => {
   let result;
   if (
     await db.collection('heart').findOne({
-      postId: new ObjectId(req.body.id),
+      postId: new ObjectId(req.params.id),
       username: req.user.username,
     })
   ) {
@@ -342,10 +355,10 @@ app.post('/heart/:id', async (req, res) => {
   } else {
     await db.collection('heart').insertOne({
       username: req.user.username,
-      postId: new ObjectId(req.body.id),
+      postId: new ObjectId(req.params.id),
     });
     await db.collection('post').updateOne(
-      { _id: new ObjectId(req.body.id) },
+      { _id: new ObjectId(req.params.id) },
       {
         $inc: { heart: 1 },
       }
@@ -353,4 +366,25 @@ app.post('/heart/:id', async (req, res) => {
     result = true;
   }
   res.json({ result, num: parseInt(req.body.num) + 1 });
+});
+
+app.delete('/delete-heart/:id', async (req, res) => {
+  let result;
+  if (
+    await db
+      .collection('heart')
+      .findOne({ postId: new ObjectId(req.params.id) })
+  ) {
+    await db.collection('heart').deleteOne({
+      username: req.user.username,
+      postId: new ObjectId(req.params.id),
+    });
+    await db
+      .collection('post')
+      .updateOne({ _id: new ObjectId(req.params.id) }, { $inc: { heart: -1 } });
+    result = true;
+  } else {
+    result = false;
+  }
+  res.json({ result, num: parseInt(req.body.num) - 1 });
 });

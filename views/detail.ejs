@@ -33,6 +33,7 @@
       <p class="detail-user"><%= post.user %></p>
       <h1 class="detail-title"><%= post.title %></h1>
       <p class="detail-content"><%= post.content %></p>
+      <p class="detail-time"><%= post.createdAt.toLocaleString() %></p>
       <div class="icon-box">
         <div class="heart-icon">
           <% if (heart) {%>
@@ -59,7 +60,7 @@
       </form>
       <div class="comment-list">
         <% for (let i = 0; i < comments.length; i++) { %>
-        <div class="comment" data-id="<%= comments[i]._id %>">
+        <div class="comment" data-comment_id="<%= comments[i]._id %>">
           <div class="comment-gray-bg" style="display: none">
             <h2>댓글을 삭제하시겠습니까?</h2>
             <button class="comment-delete-yes">삭제</button>
@@ -73,7 +74,11 @@
           </p>
           <% } %>
           <p class="comment-content"><%= comments[i].content %></p>
+          <p class="comment-time">
+            <%= comments[i].createdAt.toLocaleString() %>
+          </p>
         </div>
+
         <form
           action="/put-comment/<%= comments[i]._id %>?_method=PUT"
           method="POST"
@@ -88,8 +93,20 @@
       </div>
     </div>
     <script>
+      const comment_btn = document.querySelector('.comment-box button');
+      if ('<%= username %>') {
+        comment_btn.disabled = false;
+        comment_btn.style.backgroundColor = '#74c0fc';
+        comment_btn.style.cursor = 'pointer';
+      } else {
+        comment_btn.disabled = true;
+        comment_btn.style.backgroundColor = '#808080';
+        comment_btn.style.cursor = 'default';
+      }
+    </script>
+    <script>
       document
-        .querySelector('.fa-heart')
+        .querySelector('.fa-regular.fa-heart')
         .addEventListener('click', function (e) {
           if ('<%= username %>') {
             fetch('/heart/<%= post._id %>', {
@@ -99,7 +116,6 @@
               },
               body: JSON.stringify({
                 num: e.target.nextElementSibling.textContent,
-                id: '<%= post._id %>',
               }),
             })
               .then((res) => res.json())
@@ -114,6 +130,45 @@
             window.location.href = '/login';
           }
         });
+    </script>
+    <script>
+      document
+        .querySelector('.fa-solid.fa-heart')
+        .addEventListener('click', function (e) {
+          fetch('/delete-heart/<%= post._id %>', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              num: e.target.nextElementSibling.textContent,
+              id: '<%= post._id %>',
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.result) {
+                e.target.nextElementSibling.textContent = data.num;
+                e.target.classList.replace('fa-solid', 'fa-regular');
+              }
+            })
+            .catch((err) => console.error(err));
+        });
+    </script>
+    <script>
+      document.querySelector('.delete-yes').addEventListener('click', () => {
+        fetch('/delete/<%= post._id %>', {
+          method: 'DELETE',
+        })
+          .then((res) => {
+            if (res.redirected) {
+              window.location.href = res.url;
+            } else {
+              return res.json();
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      });
     </script>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"

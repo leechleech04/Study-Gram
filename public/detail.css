@@ -87,6 +87,10 @@
   padding: 20px;
 }
 
+.detail-time {
+  padding: 10px 20px;
+}
+
 .icon-box div {
   display: inline-block;
   padding: 0 20px 20px;
@@ -208,5 +212,10 @@
 }
 
 .comment-content {
+  margin-top: 5px;
+}
+
+.comment-time {
+  font-size: 14px;
   margin-top: 5px;
 }
