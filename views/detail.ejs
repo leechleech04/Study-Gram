@@ -106,53 +106,50 @@
     </script>
     <script>
       document
-        .querySelector('.fa-regular.fa-heart')
+        .querySelector('.fa-heart')
         .addEventListener('click', function (e) {
-          if ('<%= username %>') {
-            fetch('/heart/<%= post._id %>', {
-              method: 'POST',
+          if (e.target.classList.contains('fa-regular')) {
+            if ('<%= username %>') {
+              fetch('/heart/<%= post._id %>', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  num: e.target.nextElementSibling.textContent,
+                }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.result) {
+                    e.target.nextElementSibling.textContent = data.num;
+                    e.target.classList.replace('fa-regular', 'fa-solid');
+                  }
+                })
+                .catch((err) => console.error(err));
+            } else {
+              window.location.href = '/login';
+            }
+          } else if (e.target.classList.contains('fa-solid')) {
+            fetch('/delete-heart/<%= post._id %>', {
+              method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 num: e.target.nextElementSibling.textContent,
+                id: '<%= post._id %>',
               }),
             })
               .then((res) => res.json())
               .then((data) => {
                 if (data.result) {
                   e.target.nextElementSibling.textContent = data.num;
-                  e.target.classList.replace('fa-regular', 'fa-solid');
+                  e.target.classList.replace('fa-solid', 'fa-regular');
                 }
               })
               .catch((err) => console.error(err));
-          } else {
-            window.location.href = '/login';
           }
-        });
-    </script>
-    <script>
-      document
-        .querySelector('.fa-solid.fa-heart')
-        .addEventListener('click', function (e) {
-          fetch('/delete-heart/<%= post._id %>', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              num: e.target.nextElementSibling.textContent,
-              id: '<%= post._id %>',
-            }),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.result) {
-                e.target.nextElementSibling.textContent = data.num;
-                e.target.classList.replace('fa-solid', 'fa-regular');
-              }
-            })
-            .catch((err) => console.error(err));
         });
     </script>
     <script>
