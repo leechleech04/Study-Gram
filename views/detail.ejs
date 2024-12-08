@@ -153,24 +153,26 @@
         });
     </script>
     <script>
-      document.querySelector('.delete-yes').addEventListener('click', () => {
-        fetch('/delete/<%= post._id %>', {
-          method: 'DELETE',
-        })
-          .then((res) => {
-            if (res.redirected) {
-              window.location.href = res.url;
-            } else {
-              return res.json();
-            }
+      if (document.querySelector('.delete-yes')) {
+        document.querySelector('.delete-yes').addEventListener('click', () => {
+          fetch('/delete/<%= post._id %>', {
+            method: 'DELETE',
           })
-          .catch((error) => console.error('Error:', error));
-      });
+            .then((res) => {
+              if (res.redirected) {
+                window.location.href = res.url;
+              } else {
+                return res.json();
+              }
+            })
+            .catch((error) => console.error('Error:', error));
+        });
+      }
     </script>
+    <script src="/detail.js"></script>
     <script
       src="https://kit.fontawesome.com/a99ca2fd10.js"
       crossorigin="anonymous"
     ></script>
-    <script src="/detail.js"></script>
   </body>
 </html>

@@ -1,14 +1,19 @@
 const modal = document.querySelector('.gray-bg');
-document.querySelector('.delete-btn').addEventListener('click', () => {
-  if (modal.style.display == 'none') {
-    modal.style.display = 'flex';
-  } else {
+if (document.querySelector('.delete-btn')) {
+  document.querySelector('.delete-btn').addEventListener('click', () => {
+    if (modal.style.display == 'none') {
+      modal.style.display = 'flex';
+    } else {
+      modal.style.display = 'none';
+    }
+  });
+}
+
+if (document.querySelector('.delete-yes')) {
+  document.querySelector('.delete-no').addEventListener('click', () => {
     modal.style.display = 'none';
-  }
-});
-document.querySelector('.delete-no').addEventListener('click', () => {
-  modal.style.display = 'none';
-});
+  });
+}
 
 const textarea = document.querySelector('textarea');
 textarea.addEventListener('input', () => {

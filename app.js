@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 const methodOverride = require('method-override');
@@ -13,8 +14,6 @@ const server = createServer(app);
 const io = new Server(server);
 
 require('dotenv').config();
-
-const app = express();
 
 app.set('view engine', 'ejs');
 
