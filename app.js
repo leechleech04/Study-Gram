@@ -12,6 +12,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const server = createServer(app);
 const io = new Server(server);
+const sharedsession = require('express-socket.io-session');
 
 require('dotenv').config();
 
@@ -21,24 +22,27 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(
-  session({
-    secret: process.env.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 60 * 60 * 1000,
-    },
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URL,
-      dbName: 'studygram',
-    }),
-  })
-);
+const sessionMiddleware = session({
+  secret: process.env.COOKIE_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    maxAge: 60 * 60 * 1000,
+  },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URL,
+    dbName: 'studygram',
+  }),
+});
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, next);
+});
 
 let connectDB = require('./db.js');
 let db;
@@ -392,20 +396,4 @@ app.delete('/delete-heart/:id', async (req, res) => {
     result = false;
   }
   res.json({ result, num: parseInt(req.body.num) - 1 });
-});
-
-app.get('/chatList', (req, res) => {
-  if (req.user) {
-    res.render('chatList', { user: req.user });
-  } else {
-    res.redirect('/login');
-  }
-});
-
-app.get('/chat', (req, res) => {
-  if (req.user) {
-    res.render('chat', { user: req.user });
-  } else {
-    res.redirect('/login');
-  }
 });

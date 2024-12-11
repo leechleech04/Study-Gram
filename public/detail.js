@@ -47,23 +47,3 @@ document.querySelectorAll('.comment-delete-no').forEach((btn) => {
     e.target.parentElement.style.display = 'none';
   });
 });
-document.querySelectorAll('.comment-delete-yes').forEach((btn) => {
-  btn.addEventListener('click', function (e) {
-    fetch(
-      `/delete-comment/${e.target.parentElement.parentElement.dataset.comment_id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          e.target.parentElement.parentElement.remove();
-        }
-      })
-      .catch((err) => console.error(err));
-  });
-});

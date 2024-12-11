@@ -16,7 +16,7 @@
   <body>
     <%- include('header.ejs') %>
     <div class="hello">
-      <% if (user.username) { %>
+      <% if (user) { %>
       <h1><%= user.username %>님</h1>
       <% } %>
       <h1>StudyGram에 오신 것을 환영합니다!</h1>

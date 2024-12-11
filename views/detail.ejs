@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/detail.css" />
   </head>
   <body>
-    <%- include('header.ejs') %> <% if (user.username === post.user) { %>
+    <%- include('header.ejs') %> <% if (user && user.username === post.user) {
+    %>
     <div class="btn-box">
       <a href="/edit/<%= post._id %>"><button class="put-btn">수정</button></a>
       <button class="delete-btn">삭제</button>
@@ -67,7 +68,7 @@
             <button class="comment-delete-no">취소</button>
           </div>
           <p class="comment-user"><%= comments[i].user %></p>
-          <% if (user.username == comments[i].user) { %>
+          <% if (user && user.username == comments[i].user) { %>
           <p class="put-delete">
             <span class="put-comment">수정</span
             ><span class="delete-comment">삭제</span>
@@ -94,7 +95,7 @@
     </div>
     <script>
       const comment_btn = document.querySelector('.comment-box button');
-      if ('<%= user.username %>') {
+      if ('<%= user %>') {
         comment_btn.disabled = false;
         comment_btn.style.backgroundColor = '#74c0fc';
         comment_btn.style.cursor = 'pointer';
@@ -109,7 +110,7 @@
         .querySelector('.fa-heart')
         .addEventListener('click', function (e) {
           if (e.target.classList.contains('fa-regular')) {
-            if ('<%= user.username %>') {
+            if ('<%= user %>') {
               fetch('/heart/<%= post._id %>', {
                 method: 'POST',
                 headers: {
@@ -168,6 +169,30 @@
             .catch((error) => console.error('Error:', error));
         });
       }
+    </script>
+    <script>
+      document.querySelectorAll('.comment-delete-yes').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          fetch(
+            `/delete-comment/${e.target.parentElement.parentElement.dataset.comment_id}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data) {
+                e.target.parentElement.parentElement.remove();
+                document.querySelector('.comment-num').innerText =
+                  parseInt('<%= comments.length %>') - 1;
+              }
+            })
+            .catch((err) => console.error(err));
+        });
+      });
     </script>
     <script src="/detail.js"></script>
     <script
